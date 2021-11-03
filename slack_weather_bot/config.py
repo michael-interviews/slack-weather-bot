@@ -6,6 +6,7 @@ import os
 class Config:
     bot_token: str
     signing_secret: str
+    open_weather_map_api_key: str
     log_level: str
     port: int
 
@@ -20,6 +21,7 @@ class Config:
     def load_from_env(cls) -> "Config":
         bot_token = cls.load_str_from_env("SLACK_BOT_TOKEN")
         signing_secret = cls.load_str_from_env("SLACK_SIGNING_SECRET")
+        open_weather_map_api_key = cls.load_str_from_env("OWM_API_KEY")
         log_level = os.environ.get("LOG_LEVEL", "DEBUG")
         port_str = cls.load_str_from_env("PORT")
 
@@ -33,6 +35,7 @@ class Config:
         return Config(
             bot_token=bot_token,
             signing_secret=signing_secret,
+            open_weather_map_api_key=open_weather_map_api_key,
             log_level=log_level,
             port=port,
         )

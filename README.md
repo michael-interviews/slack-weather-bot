@@ -8,6 +8,7 @@ Export the following environment variables:
 
 * `SLACK_SIGNING_SECRET`
 * `SLACK_BOT_TOKEN`
+* `OWM_API_KEY`
 * `PORT`
 
 Run the slack bot server with:

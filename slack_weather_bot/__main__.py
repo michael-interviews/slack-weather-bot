@@ -3,14 +3,11 @@ import sys
 
 from slack_bolt import App
 
+from slack_weather_bot.bot import WeatherBot
 from slack_weather_bot.config import Config
+from slack_weather_bot.open_weather_map import OpenWeatherMap
 
 LOG = logging.getLogger(__name__)
-handler = logging.StreamHandler(sys.stdout)
-handler.setFormatter(
-    logging.Formatter(fmt="{asctime} [{levelname}] {message}", style="{")
-)
-LOG.addHandler(handler)
 
 
 def main() -> int:
@@ -20,24 +17,24 @@ def main() -> int:
         LOG.error(str(e))
         return 1
 
-    LOG.setLevel(config.log_level)
+    logging.basicConfig(
+        format="{asctime} [{levelname:7}] [{name}] {message}",
+        style="{",
+        stream=sys.stdout,
+        level=config.log_level,
+    )
 
+    client = OpenWeatherMap(config.open_weather_map_api_key)
     app = App(
         token=config.bot_token,
         signing_secret=config.signing_secret,
     )
-    app.command("/jumo_weather")(get_weather)
+
+    bot = WeatherBot(app, client)
+
     app.start(port=config.port)
 
     return 0
-
-
-def get_weather(ack, respond, command):
-    LOG.info("received weather slash command")
-    LOG.debug(f"weather slash command: {command}")
-    ack()
-    city = command.get("text")
-    respond(f"TODO: look up weather for {city}")
 
 
 if __name__ == "__main__":
