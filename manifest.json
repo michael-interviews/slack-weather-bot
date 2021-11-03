@@ -1,0 +1,36 @@
+{
+    "_metadata": {
+        "major_version": 1,
+        "minor_version": 1
+    },
+    "display_information": {
+        "name": "Weather Bot"
+    },
+    "features": {
+        "bot_user": {
+            "display_name": "Weather Bot",
+            "always_online": false
+        },
+        "slash_commands": [
+            {
+                "command": "/jumo_weather",
+                "url": "",
+                "description": "Get the current weather in a city",
+                "usage_hint": "city",
+                "should_escape": false
+            }
+        ]
+    },
+    "oauth_config": {
+        "scopes": {
+            "bot": [
+                "commands"
+            ]
+        }
+    },
+    "settings": {
+        "org_deploy_enabled": false,
+        "socket_mode_enabled": false,
+        "token_rotation_enabled": false
+    }
+}
