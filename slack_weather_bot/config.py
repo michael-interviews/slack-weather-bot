@@ -44,25 +44,12 @@ class Config:
             `InvalidPortNumberError` if the configured port number is not valid.
         """
 
-        bot_token = _get_env_or_raise("SLACK_BOT_TOKEN")
-        signing_secret = _get_env_or_raise("SLACK_SIGNING_SECRET")
-        open_weather_map_api_key = _get_env_or_raise("OWM_API_KEY")
-        log_level = os.environ.get("LOG_LEVEL", "INFO")
-        port_str = os.environ.get("PORT", "8080")
-
-        try:
-            port = int(port_str)
-            if not 0 < port < 2 ** 16:
-                raise ValueError
-        except ValueError as error:
-            raise InvalidPortNumberError(port_str) from error
-
         return Config(
-            bot_token=bot_token,
-            signing_secret=signing_secret,
-            open_weather_map_api_key=open_weather_map_api_key,
-            log_level=log_level,
-            port=port,
+            bot_token=_get_env_or_raise("SLACK_BOT_TOKEN"),
+            signing_secret=_get_env_or_raise("SLACK_SIGNING_SECRET"),
+            open_weather_map_api_key=_get_env_or_raise("OWM_API_KEY"),
+            log_level=os.environ.get("LOG_LEVEL", "INFO"),
+            port=_parse_port(os.environ.get("PORT", "8080")),
         )
 
 
@@ -78,3 +65,38 @@ def _get_env_or_raise(name: str) -> str:
     if not var:
         raise EnvironmentVariableNotFoundError(name)
     return var
+
+
+def _parse_port(port_str: str) -> int:
+    """
+    Parses and validates the given `port_str` and returns the port as an `int`.
+
+    Examples:
+        >>> _parse_port("1")
+        1
+        >>> _parse_port("65535")
+        65535
+        >>> _parse_port("not a port")
+        Traceback (most recent call last):
+            ...
+        config.InvalidPortNumberError: 'not a port' is not a valid port number
+        >>> _parse_port("0")
+        Traceback (most recent call last):
+            ...
+        config.InvalidPortNumberError: '0' is not a valid port number
+        >>> _parse_port("65536")
+        Traceback (most recent call last):
+            ...
+        config.InvalidPortNumberError: '65536' is not a valid port number
+
+    Raises:
+        InvalidPortNumberError if `port_str` is not a valid port number.
+    """
+
+    try:
+        port = int(port_str)
+        if not 0 < port < 2 ** 16:
+            raise ValueError
+        return port
+    except ValueError as error:
+        raise InvalidPortNumberError(port_str) from error

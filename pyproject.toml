@@ -8,6 +8,7 @@ authors = ["Michael"]
 python = "^3.8"
 slack-bolt = "^1.9.4"
 requests = "^2.26.0"
+pydantic = "^1.8.2"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.910"
@@ -26,6 +27,7 @@ disable = [
     "no-else-return",
     "too-few-public-methods"
 ]
+extension-pkg-whitelist = "pydantic"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

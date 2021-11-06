@@ -35,9 +35,9 @@ class WeatherBot:
             weather = self._owm_client.weather_by_city_name(city)
             LOG.debug("Weather info: %s", weather)
             if weather:
-                city = weather["name"]
-                country = weather["sys"]["country"]
-                temp = weather["main"]["temp"]
+                city = weather.name
+                country = weather.sys.country
+                temp = weather.main.temp
                 emoji = "🥶" if temp < 20.0 else "🌞"
                 respond(
                     f"The temperature in {city} ({country}) is {temp}°C {emoji}",
