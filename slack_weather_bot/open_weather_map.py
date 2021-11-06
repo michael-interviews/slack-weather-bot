@@ -15,6 +15,10 @@ class OpenWeatherMap:
         self._api_key = api_key
 
     def weather_by_city_name(self, city: str) -> Optional[Dict[Any, Any]]:
+        """
+        Looks up the current weather for the given `city`.
+        """
+
         LOG.debug("Looking up weather for '%s'", city)
         response = requests.get(
             "https://api.openweathermap.org/data/2.5/weather",
@@ -25,9 +29,10 @@ class OpenWeatherMap:
             },
         )
         LOG.debug("Weather response: %s", response)
-        if response.status_code == requests.status_codes.codes.OK:
+        # pylint: disable=no-member
+        if response.status_code == requests.codes.OK:
             return response.json()
-        elif response.status_code == requests.status_codes.codes.NOT_FOUND:
+        elif response.status_code == requests.codes.NOT_FOUND:
             return None
         else:
             LOG.error("Received an unexpected response code: %d", response.status_code)

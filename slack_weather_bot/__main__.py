@@ -4,17 +4,25 @@ import sys
 from slack_bolt import App
 
 from slack_weather_bot.bot import WeatherBot
-from slack_weather_bot.config import Config
+from slack_weather_bot.config import (
+    Config,
+    EnvironmentVariableNotFoundError,
+    InvalidPortNumberError,
+)
 from slack_weather_bot.open_weather_map import OpenWeatherMap
 
 LOG = logging.getLogger(__name__)
 
 
 def main() -> int:
+    """
+    Runs the Slack App server.
+    """
+
     try:
         config = Config.load_from_env()
-    except Exception as e:
-        LOG.error(str(e))
+    except (EnvironmentVariableNotFoundError, InvalidPortNumberError) as error:
+        LOG.error(str(error))
         return 1
 
     logging.basicConfig(
@@ -30,7 +38,8 @@ def main() -> int:
         signing_secret=config.signing_secret,
     )
 
-    bot = WeatherBot(app, client)
+    bot = WeatherBot(client)
+    bot.register_handlers(app)
 
     app.start(port=config.port)
 
