@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  bot:
+    build: .
+    environment:
+      - SLACK_SIGNING_SECRET
+      - SLACK_BOT_TOKEN
+      - OWM_API_KEY
+      - PORT
+      - LOG_LEVEL
+
+  ngrok:
+    image: ngrok/ngrok
+    command: http bot:${PORT} --log stdout 
+    ports:
+      - 4040:4040
+
